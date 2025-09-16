@@ -1,0 +1,19 @@
+{
+    "type": "doughnut",
+    "data": {
+        "labels": ["Python Coding", "Data Annotation", "Remaining"],
+        "datasets": [{
+            "data": [70, 50, 30],
+            "backgroundColor": ["#0D9488", "#22D3EE", "#D1D5DB"],
+            "borderColor": ["#0B8276", "#0EA5E9", "#9CA3AF"],
+            "borderWidth": 1
+        }]
+    },
+    "options": {
+        "responsive": true,
+        "plugins": {
+            "legend": { "position": "bottom" },
+            "title": { "display": true, "text": "Course Progress" }
+        }
+    }
+}

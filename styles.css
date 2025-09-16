@@ -1,0 +1,278 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #E5E7EB;
+    color: #1F2937;
+    position: relative;
+    overflow-x: hidden;
+}
+body.dark-mode {
+    background: #1F2937;
+    color: #E5E7EB;
+}
+body.dark-mode .stat-box, body.dark-mode .course, body.dark-mode .job, body.dark-mode .story, body.dark-mode .partner, body.dark-mode .post, body.dark-mode .feed-post, body.dark-mode .faq-item, body.dark-mode .event {
+    background: #374151;
+    border-color: #4B5563;
+}
+body.dark-mode header {
+    background: linear-gradient(to right, #111827, #0D9488);
+}
+body.dark-mode nav {
+    background: rgba(17, 24, 39, 0.9);
+}
+header {
+    position: relative;
+    background: linear-gradient(to right, #0D9488, #22D3EE);
+    padding: 1rem 0;
+}
+.hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    filter: brightness(0.7);
+}
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    background: rgba(255, 255, 255, 0.9);
+}
+.logo {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1rem;
+}
+nav ul li a {
+    color: #1F2937;
+    text-decoration: none;
+    font-weight: 500;
+}
+nav ul li a:hover {
+    color: #0D9488;
+}
+.btn {
+    background: #0D9488;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+}
+.btn:hover {
+    background: #0B8276;
+}
+.hero {
+    text-align: center;
+    padding: 5rem 1rem;
+    color: white;
+    position: relative;
+}
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+section {
+    padding: 3rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.quiz, .stats, .mission, .vision, .preview, .events, .team, .social-feed, .training, .jobs, .stories, .partners, .blog, .contact {
+    text-align: center;
+}
+.quiz form, .training form, .contact form, .newsletter {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 500px;
+    margin: 2rem auto;
+}
+.quiz input, .quiz select, .training input, .training select, .contact input, .contact textarea, .newsletter input {
+    padding: 0.5rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 5px;
+}
+.quiz select, .training select {
+    appearance: none;
+}
+.stat-box, .course, .job, .story, .partner, .post, .feed-post, .faq-item, .event {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #D1D5DB;
+    margin: 1rem;
+}
+.stat-box h3, .course h3, .job h3, .story h3, .partner h3, .post h3, .feed-post p, .faq-item h3, .event h3 {
+    font-family: 'Poppins', sans-serif;
+    color: #0D9488;
+}
+.course iframe {
+    width: 100%;
+    height: 200px;
+    margin-top: 1rem;
+}
+.progress-bar {
+    background: #D1D5DB;
+    height: 10px;
+    border-radius: 5px;
+    margin: 1rem 0;
+}
+.progress {
+    background: #0D9488;
+    height: 100%;
+    border-radius: 5px;
+    width: 0;
+    transition: width 2s ease-in-out;
+}
+.job-counter {
+    margin: 2rem 0;
+}
+.story-slider {
+    position: relative;
+    max-width: 600px;
+    margin: 2rem auto;
+    overflow: hidden;
+}
+.story {
+    display: none;
+}
+.story.active {
+    display: block;
+}
+.slider-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+.dot {
+    width: 10px;
+    height: 10px;
+    background: #D1D5DB;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.dot.active {
+    background: #0D9488;
+}
+.slider-control {
+    margin-right: 1rem;
+}
+.partner-carousel {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    padding: 1rem;
+}
+.event-grid, .feed-grid, .course-grid, .job-grid, .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+.faq input {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 2rem;
+}
+.faq-item h3 {
+    cursor: pointer;
+}
+.faq-item p {
+    display: none;
+}
+.faq-item.active p {
+    display: block;
+}
+#chatbot {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #0D9488;
+    color: white;
+    padding: 1rem;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+#chatbot-messages {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    max-width: 300px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    display: none;
+}
+#chatbot-messages p {
+    margin: 0.5rem 0;
+}
+#chatbot-messages button {
+    margin: 0.5rem 0.2rem;
+}
+.popup, .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+    text-align: center;
+}
+.modal {
+    display: none;
+}
+.modal-content {
+    position: relative;
+}
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+    .hero p {
+        font-size: 1rem;
+    }
+    nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .course iframe {
+        height: 150px;
+    }
+}

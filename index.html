@@ -1,0 +1,220 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechBridge East Africa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css?v=1.0"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css?v=1.0"/>
+    <link rel="stylesheet" href="styles.css?v=1.0">
+</head>
+<body>
+    <canvas id="particle-canvas" aria-hidden="true"></canvas>
+    <div id="cta-popup" class="popup" role="dialog" aria-labelledby="cta-title">
+        <h3 id="cta-title">Join TechBridge Today!</h3>
+        <p>Learn tech skills and land global jobs!</p>
+        <a href="training.html#signup" class="btn" aria-label="Sign up for training">Sign Up Now</a>
+        <button onclick="closePopup()" class="btn" aria-label="Close popup">Close</button>
+    </div>
+    <div id="modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <span class="modal-close" role="button" aria-label="Close modal">&times;</span>
+            <h3 id="modal-title"></h3>
+            <p id="modal-description"></p>
+        </div>
+    </div>
+    <div id="feedback-popup" class="popup" role="dialog" aria-labelledby="feedback-title">
+        <h3 id="feedback-title">Rate Our Site</h3>
+        <form id="feedback-form">
+            <label for="rating">Rating (1-5):</label>
+            <input type="number" id="rating" min="1" max="5" required aria-label="Rate site from 1 to 5">
+            <button type="submit" class="btn" aria-label="Submit feedback">Submit</button>
+            <button onclick="this.parentElement.parentElement.style.display='none';" class="btn" aria-label="Close feedback">Close</button>
+        </form>
+    </div>
+    <header class="animate__animated animate__fadeInDown">
+        <video autoplay muted loop class="hero-video" loading="lazy" aria-hidden="true">
+            <source src="https://example.com/techbridge-video.mp4" type="video/mp4">
+        </video>
+        <nav>
+            <div class="logo">TechBridge EA</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="training.html">Training</a></li>
+                <li><a href="jobs.html">Jobs</a></li>
+                <li><a href="stories.html">Stories</a></li>
+                <li><a href="partners.html">Partners</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <button id="lang-toggle" class="btn" aria-label="Toggle language">Kiswahili</button>
+            <button id="dark-mode-toggle" class="btn" aria-label="Toggle dark mode">Toggle Dark Mode</button>
+        </nav>
+        <div class="hero" style="transform: translateY(0);">
+            <h1 data-aos="fade-up">Transform Your Future with TechBridge East Africa</h1>
+            <p data-aos="fade-up" data-aos-delay="100">Skills, Jobs, Impact—Empowering Youth Across the Region!</p>
+            <a href="training.html#signup" class="btn animate__animated animate__bounce" aria-label="Join training program">Join Training Now</a>
+        </div>
+    </header>
+    <section class="quiz" data-aos="fade-up">
+        <h2>Find Your Perfect Course</h2>
+        <p>Take our quick quiz to discover which tech skill suits you!</p>
+        <form id="skill-quiz" role="form" aria-label="Course recommendation quiz">
+            <label for="interest">What interests you most?</label>
+            <select id="interest" required>
+                <option value="">Select an option</option>
+                <option value="coding">Building apps or websites</option>
+                <option value="data">Working with AI or data</option>
+                <option value="agri">Innovating in agriculture</option>
+                <option value="marketing">Promoting businesses online</option>
+            </select>
+            <label for="level">What's your experience level?</label>
+            <select id="level" required>
+                <option value="">Select an option</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Some experience</option>
+            </select>
+            <button type="submit" class="btn" aria-label="Submit quiz">Get Recommendation</button>
+        </form>
+        <div id="quiz-result" role="region" aria-live="polite"></div>
+    </section>
+    <section class="stats" data-aos="fade-up">
+        <h2>Our Impact</h2>
+        <div class="stat-box" data-aos="zoom-in" data-modal-title="Youth Trained" data-modal-description="Over 500 youth trained in tech skills across Kenya, Tanzania, and Uganda.">
+            <h3>500+</h3>
+            <p>Youth Trained</p>
+            <button class="btn learn-more" aria-label="Learn more about youth trained">Learn More</button>
+        </div>
+        <div class="stat-box" data-aos="zoom-in" data-aos-delay="100" data-modal-title="Jobs Created" data-modal-description="Facilitated 200+ tech jobs, both remote and local, for East African youth.">
+            <h3>200+</h3>
+            <p>Jobs Created</p>
+            <button class="btn learn-more" aria-label="Learn more about jobs created">Learn More</button>
+        </div>
+        <div class="stat-box" data-aos="zoom-in" data-aos-delay="200" data-modal-title="Women Empowered" data-modal-description="50% of our trainees are women, driving gender equity in tech.">
+            <h3>50%</h3>
+            <p>Women Empowered</p>
+            <button class="btn learn-more" aria-label="Learn more about women empowered">Learn More</button>
+        </div>
+        <div class="stat-box" data-aos="zoom-in" data-aos-delay="300" data-modal-title="Course Completion" data-modal-description="75% of trainees complete our courses, earning industry-recognized certificates.">
+            <h3>75%</h3>
+            <p>Course Completion</p>
+            <button class="btn learn-more" aria-label="Learn more about course completion">Learn More</button>
+        </div>
+    </section>
+    <section class="analytics" data-aos="fade-up">
+        <h2>Real-Time Impact</h2>
+        <canvas id="impact-chart" style="max-width: 600px; margin: 0 auto;"></canvas>
+    </section>
+    <section class="mission" data-aos="slide-left">
+        <h2>Our Mission</h2>
+        <p>Empowering East African youth with digital skills for global opportunities, starting in rural Kenya and scaling to Tanzania, Uganda, and Rwanda.</p>
+    </section>
+    <section class="vision" data-aos="slide-right">
+        <h2>Our Vision</h2>
+        <p>To create a tech-savvy generation that drives innovation, reduces unemployment, and builds sustainable communities across East Africa by 2030.</p>
+    </section>
+    <section class="preview" data-aos="fade-up">
+        <h2>Explore Our Training</h2>
+        <p>Learn coding, AI, data annotation, and agri-tech—built for East Africa’s future.</p>
+        <a href="training.html" class="btn animate__animated animate__bounce" aria-label="View training courses">See Courses</a>
+        <a href="brochure.pdf" class="btn animate__animated animate__bounce" download aria-label="Download program guide">Download Program Guide</a>
+    </section>
+    <section class="events" data-aos="fade-up">
+        <h2>Upcoming Events</h2>
+        <div class="event-grid">
+            <div class="event" data-aos="fade-up">
+                <h3>Python Workshop</h3>
+                <p>Nairobi, Oct 10, 2025</p>
+                <button class="btn add-to-calendar" data-event="Python Workshop" aria-label="Add Python Workshop to calendar">Add to Calendar</button>
+            </div>
+            <div class="event" data-aos="fade-up" data-aos-delay="100">
+                <h3>AI Job Fair</h3>
+                <p>Kisumu, Nov 15, 2025</p>
+                <button class="btn add-to-calendar" data-event="AI Job Fair" aria-label="Add AI Job Fair to calendar">Add to Calendar</button>
+            </div>
+        </div>
+    </section>
+    <section class="team" data-aos="fade-up">
+        <h2>Our Team</h2>
+        <div class="team-member" data-aos="zoom-in">
+            <h3>Walter Koech</h3>
+            <p>CEO | Nairobi, Kenya | +254714392009</p>
+        </div>
+        <div class="team-member" data-aos="zoom-in" data-aos-delay="100">
+            <h3>Aisha Mwangi</h3>
+            <p>Training Coordinator | Kisumu, Kenya</p>
+        </div>
+        <div class="team-member" data-aos="zoom-in" data-aos-delay="200">
+            <h3>John Otieno</h3>
+            <p>Tech Trainer | Eldoret, Kenya</p>
+        </div>
+    </section>
+    <section class="social-feed" data-aos="fade-up">
+        <h2>What’s Happening on X</h2>
+        <div class="feed-grid">
+            <div class="feed-post" data-aos="fade-up" data-modal-title="Jane's Success" data-modal-description="Jane graduated from our Python course and now codes for a Nairobi startup.">
+                <p>"Just graduated from TechBridge’s Python course! Now coding for a Nairobi startup! #TechBridgeEA" – @JaneKariuki</p>
+                <button class="btn share-btn" data-text="Just graduated from TechBridge’s Python course!" aria-label="Share Jane's story on X">Share on X</button>
+                <button class="btn learn-more" aria-label="Learn more about Jane's story">Learn More</button>
+            </div>
+            <div class="feed-post" data-aos="fade-up" data-aos-delay="100" data-modal-title="Ali's Journey" data-modal-description="Ali's data annotation skills led to a global remote job, thanks to TechBridge.">
+                <p>"Data annotation opened global doors for me. Thanks, TechBridge! #YouthEmpowerment" – @AliMwanza</p>
+                <button class="btn share-btn" data-text="Data annotation opened global doors!" aria-label="Share Ali's story on X">Share on X</button>
+                <button class="btn learn-more" aria-label="Learn more about Ali's story">Learn More</button>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <h3>Stay Updated</h3>
+        <form class="newsletter" role="form" aria-label="Newsletter signup">
+            <input type="email" placeholder="Enter your email" required aria-label="Email address">
+            <button type="submit" class="btn" aria-label="Subscribe to newsletter">Subscribe</button>
+        </form>
+        <p>Led by Walter Koech, CEO | Nairobi, Kenya | +254714392009 | <a href="mailto:info@techbridgeea.org">info@techbridgeea.org</a> | Follow us on <a href="https://x.com/TechBridgeEA">X</a></p>
+        <p>© 2025 TechBridge EA. All rights reserved.</p>
+    </footer>
+    <div id="chatbot" role="button" aria-label="Open chatbot">Chat with Us</div>
+    <div id="chatbot-messages" role="dialog" aria-live="polite"></div>
+    <script src="script.js?v=1.0"></script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training - TechBridge East Africa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css?v=1.0"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css?v=1.0"/>
+    <link rel="stylesheet" href="styles.css?v=1.0">
+</head>
+<body>
+    <div id="modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <span class="modal-close" role="button" aria-label="Close modal">&times;</span>
+            <h3 id="modal-title"></h3>
+            <p id="modal-description"></p>
+        </div>
+    </div>
+    <header class="animate__animated animate__fadeInDown">
+        <nav>
+            <div class="logo">TechBridge EA</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="training.html">Training</a></li>
+                <li><a href="jobs.html">Jobs</a></li>
+                <li><a href="stories.html">Stories</a></li>
+                <li><a href="partners.html">Partners</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <button id="lang-toggle" class="btn" aria-label="Toggle language">Kiswahili</button>
+            <button id="dark-mode-toggle" class="btn" aria-label="Toggle dark mode">Toggle Dark Mode</button>
+        </nav>
+    </header>
+    <section class="training" data-aos="fade-up">
+        <h1>Unlock Your Potential with Free Tech Training</h1>
+        <p>Learn in-demand skills like coding, AI, data annotation, and agri-tech—accessible online or offline!</p>
+        <div class="course-grid">
+            <div class="course" data-aos="fade-up" data-modal-title="Python Coding" data-modal-description="Master Python for web and AI development. 3 months, beginner-friendly. Includes hands-on projects and mentorship.">
+                <h3>Python Coding</h3>
+                <p>Master Python for web and AI development.</p>
+                <button class="btn learn-more" aria-label="Learn more about Python Coding">Learn More</button>
+                <a href="#signup" class="btn animate__animated animate__bounce" aria-label="Enroll in Python Coding">Enroll Now</a>
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" loading="lazy" frameborder="0" allowfullscreen aria-label="Python Coding preview"></iframe>
+            </div>
+            <div class="course" data-aos="fade-up" data-aos-delay="100" data-modal-title="Data Annotation" data-modal-description="Learn to label data for AI models, opening global remote jobs. Flexible schedule, no prior experience needed.">
+                <h3>Data Annotation</h3>
+                <p>Learn to label data for AI models.</p>
+                <button class="btn learn-more" aria-label="Learn more about Data Annotation">Learn More</button>
+                <a href="#signup" class="btn animate__animated animate__bounce" aria-label="Enroll in Data Annotation">Enroll Now</a>
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" loading="lazy" frameborder="0" allowfullscreen aria-label="Data Annotation preview"></iframe>
+            </div>
+            <div class="course" data-aos="fade-up" data-aos-delay="200" data-modal-title="Agri-Tech Apps" data-modal-description="Build tools to boost farming with tech, tailored for East Africa. Learn app development with real-world impact.">
+                <h3>Agri-Tech Apps</h3>
+                <p>Build tools to boost farming with tech.</p>
+                <button class="btn learn-more" aria-label="Learn more about Agri-Tech Apps">Learn More</button>
+                <a href="#signup" class="btn animate__animated animate__bounce" aria-label="Enroll in Agri-Tech Apps">Enroll Now</a>
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" loading="lazy" frameborder="0" allowfullscreen aria-label="Agri-Tech Apps preview"></iframe>
+            </div>
+            <div class="course" data-aos="fade-up" data-aos-delay="300" data-modal-title="Digital Marketing" data-modal-description="Grow businesses online with SEO and social media strategies. Perfect for entrepreneurs and freelancers.">
+                <h3>Digital Marketing</h3>
+                <p>Grow businesses online with SEO.</p>
+                <button class="btn learn-more" aria-label="Learn more about Digital Marketing">Learn More</button>
+                <a href="#signup" class="btn animate__animated animate__bounce" aria-label="Enroll in Digital Marketing">Enroll Now</a>
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" loading="lazy" frameborder="0" allowfullscreen aria-label="Digital Marketing preview"></iframe>
+            </div>
+        </div>
+        <div class="progress-tracker" data-aos="fade-up">
+            <h2>Your Progress</h2>
+            <p>Track your course applications here!</p>
+            <div class="progress-bar">
+                <div class="progress" id="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">70% Complete</div>
+            </div>
+            <canvas id="course-progress-chart" style="max-width: 400px; margin: 20px auto;"></canvas>
+            <button class="btn" id="download-progress" aria-label="Download progress report">Download Progress Report</button>
+        </div>
+        <h2 id="signup">Join Today</h2>
+        <form role="form" aria-label="Training application form">
+            <input type="text" placeholder="Full Name" required aria-label="Full name">
+            <input type="email" placeholder="Email" required aria-label="Email address">
+            <select required aria-label="Gender">
+                <option value="">Select Gender</option>
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+                <option value="other">Other</option>
+            </select>
+            <input type="text" placeholder="Location (e.g., Nairobi, Kenya)" required aria-label="Location">
+            <button type="submit" class="btn animate__animated animate__bounce" aria-label="Apply for training">Apply Now</button>
+        </form>
+    </section>
+    <footer>
+        <p>Led by Walter Koech, CEO | Nairobi, Kenya | +254714392009 | <a href="mailto:info@techbridgeea.org">info@techbridgeea.org</a> | Follow us on <a href="https://x.com/TechBridgeEA">X</a></p>
+    </footer>
+    <div id="chatbot" role="button" aria-label="Open chatbot">Chat with Us</div>
+    <div id="chatbot-messages" role="dialog" aria-live="polite"></div>
+    <script src="script.js?v=1.0"></script>
+</body>
+</html>

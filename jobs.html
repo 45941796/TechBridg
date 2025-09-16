@@ -1,0 +1,118 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobs - TechBridge East Africa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css?v=1.0"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css?v=1.0"/>
+    <link rel="stylesheet" href="styles.css?v=1.0">
+</head>
+<body>
+    <div id="modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <span class="modal-close" role="button" aria-label="Close modal">&times;</span>
+            <h3 id="modal-title"></h3>
+            <p id="modal-description"></p>
+        </div>
+    </div>
+    <header class="animate__animated animate__fadeInDown">
+        <nav>
+            <div class="logo">TechBridge EA</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="training.html">Training</a></li>
+                <li><a href="jobs.html">Jobs</a></li>
+                <li><a href="stories.html">Stories</a></li>
+                <li><a href="partners.html">Partners</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <button id="lang-toggle" class="btn" aria-label="Toggle language">Kiswahili</button>
+            <button id="dark-mode-toggle" class="btn" aria-label="Toggle dark mode">Toggle Dark Mode</button>
+        </nav>
+    </header>
+    <section class="jobs" data-aos="fade-up">
+        <h1>From Training to Triumph—Find Your Dream Job</h1>
+        <p>Explore remote and local tech opportunities tailored for East African youth.</p>
+        <div class="job-counter">
+            <h3><span id="job-count">0</span>+ Jobs Created</h3>
+            <div class="progress-bar">
+                <div class="progress" id="job-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+        <div class="job-grid">
+            <div class="job" data-aos="fade-up" data-modal-title="Data Annotator (Remote)" data-modal-description="Work with global AI firms, flexible hours, $5–$10/hour. No experience required, training provided.">
+                <h3>Data Annotator (Remote)</h3>
+                <p>Work with global AI firms, flexible hours.</p>
+                <button class="btn learn-more" aria-label="Learn more about Data Annotator job">Learn More</button>
+                <a href="mailto:info@techbridgeea.org?subject=Apply for Data Annotator" class="btn animate__animated animate__bounce" aria-label="Apply for Data Annotator">Apply Now</a>
+            </div>
+            <div class="job" data-aos="fade-up" data-aos-delay="100" data-modal-title="Junior Coder (Nairobi)" data-modal-description="Join a startup building agri-tech apps, KES 50,000/month. Requires basic Python skills.">
+                <h3>Junior Coder (Nairobi)</h3>
+                <p>Join a startup building agri-tech apps.</p>
+                <button class="btn learn-more" aria-label="Learn more about Junior Coder job">Learn More</button>
+                <a href="mailto:info@techbridgeea.org?subject=Apply for Junior Coder" class="btn animate__animated animate__bounce" aria-label="Apply for Junior Coder">Apply Now</a>
+            </div>
+            <div class="job" data-aos="fade-up" data-aos-delay="200" data-modal-title="AI Specialist (Arusha, Tanzania)" data-modal-description="Develop LLM models for local businesses, competitive salary. Advanced Python or AI skills needed.">
+                <h3>AI Specialist (Arusha, Tanzania)</h3>
+                <p>Develop LLM models for local businesses.</p>
+                <button class="btn learn-more" aria-label="Learn more about AI Specialist job">Learn More</button>
+                <a href="mailto:info@techbridgeea.org?subject=Apply for AI Specialist" class="btn animate__animated animate__bounce" aria-label="Apply for AI Specialist">Apply Now</a>
+            </div>
+            <div class="job" data-aos="fade-up" data-aos-delay="300" data-modal-title="UX Designer (Kigali, Rwanda)" data-modal-description="Create user-friendly apps for e-commerce, remote options available. Experience with Figma or Adobe XD preferred.">
+                <h3>UX Designer (Kigali, Rwanda)</h3>
+                <p>Create user-friendly apps for e-commerce.</p>
+                <button class="btn learn-more" aria-label="Learn more about UX Designer job">Learn More</button>
+                <a href="mailto:info@techbridgeea.org?subject=Apply for UX Designer" class="btn animate__animated animate__bounce" aria-label="Apply for UX Designer">Apply Now</a>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <p>Led by Walter Koech, CEO | Nairobi, Kenya | +254714392009 | <a href="mailto:info@techbridgeea.org">info@techbridgeea.org</a> | Follow us on <a href="https://x.com/TechBridgeEA">X</a></p>
+    </footer>
+    <div id="chatbot" role="button" aria-label="Open chatbot">Chat with Us</div>
+    <div id="chatbot-messages" role="dialog" aria-live="polite"></div>
+    <script src="script.js?v=1.0"></script>
+</body>
+</html>
